@@ -75,4 +75,79 @@ new Store('Paris', 2.3, 38, 20);
 new Store('Lima', 4.6, 16, 3);
 
 
+function renderHeader() {
+  var emptyCell = document.createElement('th');
+  headerRow.appendChild(emptyCell);
+  for(var i=0; i<hours.length; i++) {
+    var timeCell = document.createElement('th');
+    timeCell.textContent = hours[i];
+    headerRow.appendChild(timeCell);
+  }
+  var storeTotalHeaderCell = document.createElement('th');
+  storeTotalHeaderCell.textContent = ('TOTAL');
+  headerRow.appendChild(storeTotalHeaderCell);
+  tableHeader.appendChild(headerRow);
+}
+
+function renderBody() {
+  for(var i=0; i<stores.length; i++) {
+    stores[i].renderSales();
+  }
+}
+
+function renderFooter() {
+  while (footerRow.firstChild) {
+    footerRow.removeChild(footerRow.firstChild);
+  }
+  grandTotalSales = 0;
+  var emptyCell = document.createElement('th');
+  footerRow.appendChild(emptyCell);
+  var hourlyStoreTotal = 0;
+  for (var i=0; i<hours.length; i++) {
+    hourlyStoreTotal = 0;
+    for(var j=0; j<stores.length; j++) {
+      hourlyStoreTotal += stores[j].hourlySales[i];
+      grandTotalSales += stores[j].hourlySales[i];
+    }
+    var hourlyTotalCell = document.createElement('th');
+    hourlyTotalCell.textContent = (hourlyStoreTotal);
+    footerRow.appendChild(hourlyTotalCell);
+  }
+  var grandTotalCell = document.createElement('th');
+  grandTotalCell.textContent = grandTotalSales;
+  footerRow.appendChild(grandTotalCell);
+  tableFooter.appendChild(footerRow);
+}
+
+var locationForm = document.getElementById('locationForm');
+
+locationForm.addEventListener('submit', function submitLocation(event) {
+  event.preventDefault();
+  var name = event.target.name.value;
+  console.log(event.target.id);
+  console.log(event.target.avgSale.value);
+  var avgSale = event.target.avgSale.value;
+  var maxCust = event.target.maxCust.value;
+  var minCust = event.target.minCust.value;
+
+  var newLocation = new Store(name, avgSale, maxCust, minCust);
+  newLocation.renderSales();
+
+  renderFooter();
+
+  event.target.name.value = null;
+  event.target.avgSale.value = null;
+  event.target.maxCust.value = null;
+  event.target.minCust.value = null;
+});
+
+function renderTable() {
+  renderHeader();
+  renderBody();
+  renderFooter();
+}
+
+renderTable();
+
+
 
